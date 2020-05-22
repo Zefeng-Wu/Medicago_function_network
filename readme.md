@@ -1,4 +1,3 @@
-#!/bin/bash
 
 ## 1 download ensemble plants data
 mkdir pep
@@ -21,7 +20,6 @@ rsync -av rsync://ftp.ensemblgenomes.org/all/pub/fungi/current/fasta/*/*/pep/*.p
     
     for m in $(seq 1 183); do echo $m; rsync -av rsync://ftp.ensemblgenomes.org/all/pub/bacteria/current/fasta/bacteria_${m}_collection/*/pep/*.pep.all.fa.gz ./ ;done
     python python species_uniq.py
-    
     nohup sh -c 'for m in $(ls *.fa);do echo $m; blastp -db ../ensembl_plants/2Mt2others/Medicago_truncatula.MedtrA17_4.0.pep.all.fa -out 2Mt2others/$(basename $m).blout.txt -evalue 1e-5 -query $m  -outfmt 6 -num_threads 25 ;done' &
 
 ## 4 metazoa (no alternative splicing)
