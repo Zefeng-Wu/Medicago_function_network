@@ -21,8 +21,19 @@ co_exp_g<-simplify(co_exp_g,remove.multiple = TRUE,remove.loops = TRUE,edge.attr
 ppi <-read.table("PPI2.txt",header = TRUE,stringsAsFactors = FALSE)
 ppi <-ppi[-3]
 ppi$PPI<-"PPI"
+
+ppi_litrture<- read.table("mt_interact_liturature.txt",stringsAsFactors = FALSE,sep="\t")
+ppi_litrture<- ppi_litrture[,c(1,3)]
+ppi_litrture$PPI<-"PPI"
+colnames(ppi_litrture)<-colnames(ppi)
+
+ppi<-rbind(ppi,ppi_litrture)
+
 ppi_g <- graph_from_data_frame(d = ppi,directed = FALSE)
 ppi_g<-simplify(ppi_g,remove.multiple = TRUE,remove.loops = TRUE,edge.attr.comb = "random")
+
+
+
 
 
 ## 3. ppi_by_domain
@@ -91,6 +102,7 @@ focus_gene ="MTR_7g113680" #nf-y
 focus_gene = "MTR_8g043970" #ccamk
 focus_gene = "MTR_5g099060" #nin
 focus_gene = "MTR_5g026850"
+MTR_3g089005
 Sub_Net_Single_Gene_Vis(focus_gene,focus_gene)
 
 ### visulization gene list in a network
@@ -151,7 +163,7 @@ nodule_genes$color <- factor(x=nodule_genes$V3,
 nodule_genes$color<-as.character(nodule_genes$color)
 
 sub_g <- induced_subgraph(u_g,vids = nodule_genes$V1)
-#sub_g <- subgraph.edges(sub_g, E(sub_g)[!is.na(E(sub_g)$PPI)]) 
+sub_g <- subgraph.edges(sub_g, E(sub_g)[!is.na(E(sub_g)$PPI)]) 
 
 temp_df <- data.frame(gn=names(V(sub_g)),stringsAsFactors = FALSE)
 temp_df$syno<- ifelse(temp_df$gn%in%nodule_genes$V1,
@@ -169,7 +181,7 @@ E(sub_g)$width=2
 par(mar=c(5,5,5,5))
 plot.igraph(sub_g,
             layout=layout_on_sphere,
-            vertex.size=8,
+            vertex.size=6,
             vertex.label.cex=1,
             vertex.label.color="black",
             #vertex.color=
